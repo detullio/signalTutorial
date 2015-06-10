@@ -5,6 +5,7 @@
 #include <string>
 #include <vector>
 #include <algorithm>
+#include <iostream>
 
 #include <signal.h>
 
@@ -103,12 +104,13 @@ namespace KDetTestArea
 
         auto glambda = [&](int addSignal){sigaddset(&m_signalSet, addSignal);};
         std::for_each(allSignalsDefine.begin(), allSignalsDefine.end(), glambda);
-      }
+      };
+
+    void wait(){int daSignal = 0; sigwait(&m_signalSet, &daSignal);std::cout << daSignal << std::endl;};
+
   };
 
-
 }
-
 
 #endif
  

@@ -22,7 +22,9 @@ int main(int argumentCount, char **argumentVector)
   BOOST_LOG_TRIVIAL(fatal) << "A fatal severity message";
 
   //start signal handler
+  KDetTestArea::signalBlockingHandler daHandler;
 
+  daHandler.wait();
   //spawn my threads
 
   //detach from console
