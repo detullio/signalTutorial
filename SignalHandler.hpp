@@ -3,11 +3,55 @@
 
 #include <map>
 #include <string>
+#include <vector>
+#include <algorithm>
+
 #include <signal.h>
 
 namespace KDetTestArea
 {
+  const std::vector<int> allSignalsDefine {
+    //this is a quick copy from the system header
+    {SIGHUP},
+    {SIGINT},
+    {SIGQUIT},
+    {SIGILL},
+    {SIGTRAP},
+    {SIGABRT},
+    {SIGIOT},
+    {SIGBUS},
+    {SIGFPE},
+    {SIGKILL},
+    {SIGUSR1},
+    {SIGSEGV},
+    {SIGUSR2},
+    {SIGPIPE},
+    {SIGALRM},
+    {SIGTERM},
+    {SIGSTKFLT},
+    {SIGCLD},
+    {SIGCHLD},
+    {SIGCONT},
+    {SIGSTOP},
+    {SIGTSTP},
+    {SIGTTIN},
+    {SIGTTOU},
+    {SIGURG},
+    {SIGXCPU},
+    {SIGXFSZ},
+    {SIGVTALRM},
+    {SIGPROF},
+    {SIGWINCH},
+    {SIGPOLL},
+    {SIGIO},
+    {SIGPWR},
+    {SIGSYS},
+    {SIGUNUSED}
+
+  };
+
   const std::map<int, std::string> allSignals {
+    //this is a quick copy from the system header
     {SIGHUP, "SIGHUP"},
     {SIGINT, "SIGINT"},
     {SIGQUIT, "SIGQUIT"},
@@ -56,6 +100,9 @@ namespace KDetTestArea
     signalBlockingHandler()
       {
         sigemptyset(&m_signalSet);
+
+        auto glambda = [&](int addSignal){sigaddset(&m_signalSet, addSignal);};
+        std::for_each(allSignalsDefine.begin(), allSignalsDefine.end(), glambda);
       }
   };
 
