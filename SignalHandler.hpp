@@ -7,6 +7,8 @@
 #include <algorithm>
 #include <iostream>
 
+#include <boost/log/trivial.hpp>
+
 #include <signal.h>
 
 namespace KDetTestArea
@@ -106,7 +108,14 @@ namespace KDetTestArea
         std::for_each(allSignalsDefine.begin(), allSignalsDefine.end(), glambda);
       };
 
-    void wait(){int daSignal = 0; sigwait(&m_signalSet, &daSignal);std::cout << daSignal << std::endl;};
+    void wait(){
+
+      int daSignal = 0;
+      sigwait(&m_signalSet, &daSignal);
+
+      BOOST_LOG_TRIVIAL(trace) << allSignals.find(daSignal)->second;
+
+    };
 
   };
 
