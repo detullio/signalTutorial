@@ -4,33 +4,60 @@
 #include <boost/log/trivial.hpp>
 // #include <boost/log/expressions.hpp>
 // #include <boost/log/sinks/text_file_backend.hpp>
- #include <boost/log/utility/setup/file.hpp>
+#include <boost/log/utility/setup/file.hpp>
 // #include <boost/log/utility/setup/common_attributes.hpp>
 // #include <boost/log/sources/severity_logger.hpp>
 // #include <boost/log/sources/record_ostream.hpp>
 
+#include <unistd.h>
+
+namespace KDetTestArea
+{
+  class RedShirt
+  {
+
+  public:
+
+    RedShirt(){BOOST_LOG_TRIVIAL(trace) << this << " has been constructed!";};
+
+    virtual ~RedShirt(){
+      static const char msg[] = "SIGCHLD Recieved\n";
+      write(STDERR_FILENO, msg, strlen(msg));
+    };
+
+  };
+
+};
+
+
 int main(int argumentCount, char **argumentVector)
 {
+
 // setup logging
   boost::log::add_file_log("sample.log");
-
-
-  // BOOST_LOG_TRIVIAL(debug) << "A debug severity message";
-  // BOOST_LOG_TRIVIAL(info) << "An informational severity message";
-  // BOOST_LOG_TRIVIAL(warning) << "A warning severity message";
-  // BOOST_LOG_TRIVIAL(error) << "An error severity message";
-  // BOOST_LOG_TRIVIAL(fatal) << "A fatal severity message";
 
   //start signal handler
   KDetTestArea::signalBlockingHandler daHandler;
 
-  daHandler.wait();
+//  daHandler.wait();// I guess this is a degenerate test of the handler construction
+
   //spawn my threads
+  static KDetTestArea::RedShirt gonnaDieAtWeirdTimes;
+
+  KDetTestArea::RedShirt mightLive;
 
   //detach from console
+  pid_t processId = fork();
 
-  //never reached
+  if(0 != processId) {
+    quick_exit(EXIT_SUCCESS);
+  }
 
+  daHandler.wait();// I guess this is a degenerate test of the handler construction
+
+  //never reached with call to exit()
+
+  BOOST_LOG_TRIVIAL(trace) << "WTF";
   return EXIT_FAILURE;
 
 }
